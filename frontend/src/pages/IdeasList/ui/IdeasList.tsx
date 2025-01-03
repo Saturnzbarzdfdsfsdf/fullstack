@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 
-import { getViewIdeaRoute } from '../../app/routes/Routes'
+import { getViewIdeaRoute } from '../../../app/routes/Routes'
 
-import { trpc } from '../../shared/api/trpc'
+import { trpc } from '../../../shared/api/trpc'
 
 import styles from './IdeasList.module.scss'
 

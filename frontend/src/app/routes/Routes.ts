@@ -6,8 +6,10 @@ const getRouteParams = <T extends Record<string, boolean>>(object: T) => {
 }
 
 export const getAllIdeasRoute = () => '/'
+export const getNewIdeasRoute = () => '/ideas/new'
+
+export const getViewIdeaRoute = ({ ideaNick }: TIdeaRouteParams) =>
+	`/ideas/${ideaNick}`
 
 export const IdeaRouteParams = getRouteParams({ ideaNick: true })
 export type TIdeaRouteParams = typeof IdeaRouteParams
-export const getViewIdeaRoute = ({ ideaNick }: TIdeaRouteParams) =>
-	`/ideas/${ideaNick}`

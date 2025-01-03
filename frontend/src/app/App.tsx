@@ -1,15 +1,15 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
 
-import Layout from './Layout/Layout'
-import {
-	getAllIdeasRoute,
-	getViewIdeaRoute,
-	IdeaRouteParams,
-} from './routes/Routes'
+
+import * as routes from './routes/Routes'
 
 import { TrpcProvider } from '../shared/api/trpc'
 
-import IdeasList from '../pages/IdeasList/IdeasList'
+import Layout from './Layout/Layout'
+
+import { IdeasList } from '../pages/IdeasList'
+import { IdeaNew } from '../pages/new-idea'
+
 import ViewIdea from '../widget/IdeaView/IdeaView'
 
 import '../shared/styles/global.scss'
@@ -20,11 +20,20 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					<Route element={<Layout />}>
-						<Route path={getAllIdeasRoute()} element={<IdeasList />} />
+
+						<Route path={
+							routes.getAllIdeasRoute()} 
+							element={<IdeasList />} />
+							
+						<Route path={
+							routes.getNewIdeasRoute()} 
+							element={<IdeaNew />} />
+
 						<Route
-							path={getViewIdeaRoute(IdeaRouteParams)}
+							path={routes.getViewIdeaRoute(routes.IdeaRouteParams)}
 							element={<ViewIdea />}
 						/>
+
 					</Route>
 				</Routes>
 			</BrowserRouter>
