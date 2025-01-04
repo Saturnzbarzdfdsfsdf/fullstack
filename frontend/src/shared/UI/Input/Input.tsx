@@ -1,6 +1,6 @@
 import { FC } from 'react'
-
-import { type IInputProps } from '../types/index'
+import cn from 'classnames'
+import { type IInputProps } from '../../types/index'
 
 import styles from './Input.module.scss'
 
@@ -10,22 +10,34 @@ const Input: FC<IInputProps> = props => {
 	const value = formik.values[name]
 	const touched = formik.touched[name]
 	const errors = formik.errors[name] as string | undefined
+	const invalid = !!touched && !!errors
+	const disabled = formik.isSubmitting
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		 formik.setFieldValue(name, e.target.value)
+		formik.setFieldValue(name, e.target.value)
 	}
 
 	const handleOnBlur = () => {
-		 formik.setFieldTouched(name)
+		formik.setFieldTouched(name)
 	}
 
 	return (
-		<div className={styles.input__wrapper}>
-			<label htmlFor={name}>{label}</label>
-			<br />
+		<div
+			className={cn({
+				[styles.field]: true,
+				[styles.disabled]: disabled,
+			})}
+		>
+			<label className={styles.label} htmlFor={name}>
+				{label}
+			</label>
+
 			<input
+				className={cn({
+					[styles.input]: true,
+					[styles.invalid]: invalid,
+				})}
 				type='text'
-				className={styles.input}
 				disabled={formik.isSubmitting}
 				onChange={handleOnChange}
 				onBlur={handleOnBlur}
@@ -33,7 +45,7 @@ const Input: FC<IInputProps> = props => {
 				name={name}
 				id={name}
 			/>
-			{!!touched && !!errors && <div style={{ color: 'red' }}>{errors}</div>}
+			{invalid && <div className={styles.error}>{errors}</div>}
 		</div>
 	)
 }

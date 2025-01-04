@@ -1,0 +1,19 @@
+@import '../../styles/_variables';
+@import '../../styles/mixins';
+
+.alert {
+	margin-bottom: 5px;
+	padding: 10px;
+	border-radius: $borderRadiusSmall;
+	max-width: 250px;
+
+	&.red {
+		background-color: #ffd1d1;
+		color: #631717;
+	}
+
+	&.green {
+		background-color: #d7ffd7;
+		color: #2b6d2b;
+	}
+}

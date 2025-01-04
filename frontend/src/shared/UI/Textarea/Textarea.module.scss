@@ -1,15 +1,11 @@
-.input__wrapper {
-  margin-bottom: 10px;
-  // background-color: rebeccapurple;
-}
+@import '../Input/input.module.scss';
 
-.input {
-  font-size: 18px;
-  height: 65px;
-  border: 1px solid black;
-}
-
-.input:hover {
-  cursor: pointer;
-  background-color: lightgray;
+.field {
+	.input {
+		min-height: 150px;
+		width: 20rem;
+		max-width: none;
+		resize: vertical;
+    margin-bottom: 10px;
+	}
 }

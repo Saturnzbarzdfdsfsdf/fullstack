@@ -5,6 +5,7 @@ interface IFormValues {
 	nick: string
 	description: string
 	text: string
+	maxWidth?: number
 }
 
 export interface IInputProps {
