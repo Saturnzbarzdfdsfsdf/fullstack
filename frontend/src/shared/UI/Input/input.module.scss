@@ -1,0 +1,15 @@
+.input__wrapper {
+  margin-bottom: 10px;
+  // background-color: rebeccapurple;
+}
+
+.input {
+  font-size: 18px;
+  height: 25px;
+  border: 1px solid black;
+}
+
+.input:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}

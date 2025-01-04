@@ -7,30 +7,31 @@ interface IInputProps {
 	formik: FormikProps<any>
 }
 
-const Input: FC<IInputProps> = props => {
+import styles from './Input.module.scss'
 
+const Input: FC<IInputProps> = props => {
 	const { name, label, formik } = props
 
 	const value = formik.values[name]
-	const touched = formik.touched[name] 
+	const touched = formik.touched[name]
 	const errors = formik.errors[name] as string | undefined
-	
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		void formik.setFieldValue(name, e.target.value)
 	}
-	
-	const handleOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+	const handleOnBlur = () => {
 		void formik.setFieldTouched(name)
 	}
-	
 
 	return (
-		<div style={{ marginBottom: 10 }}>
+		<div className={styles.input__wrapper}>
 			<label htmlFor={name}>{label}</label>
 			<br />
 			<input
+				className={styles.input}
 				type='text'
-				onChange={handleChange}
+				onChange={handleOnChange}
 				onBlur={handleOnBlur}
 				value={value}
 				name={name}
