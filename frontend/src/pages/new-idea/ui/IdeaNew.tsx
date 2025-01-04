@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { useFormik } from 'formik'
 import { withZodSchema } from 'formik-validator-zod'
 import { trpc } from '../../../shared/api/trpc/index'
@@ -9,8 +11,10 @@ import { zCreateIdeaTrpcInput } from '@full-app/backend/src/router/createIdea/in
 import styles from './IdeaNew.module.scss'
 
 const IdeaNew = () => {
+	const [successMessage, setSuccessMessage] = useState(false)
+	const [submittingError, setSubmittingError] = useState<string | null>(null)
 
- const createIdea = trpc.createIdea.useMutation()
+	const createIdea = trpc.createIdea.useMutation()
 
 	const formik = useFormik({
 		initialValues: {
@@ -19,30 +23,62 @@ const IdeaNew = () => {
 			description: '',
 			text: '',
 		},
+
 		onSubmit: async values => {
-			await createIdea.mutateAsync(values)
+			try {
+				await createIdea.mutateAsync(values)
+
+				console.log('Before reset:', formik.values)
+				formik.resetForm({
+					values: formik.initialValues,
+					errors: {},
+					touched: {},
+				})
+				console.log('After reset:', formik.values)
+
+				setSuccessMessage(true)
+
+				setTimeout(() => {
+					setSuccessMessage(false)
+				}, 3000)
+			} catch (error: any) {
+				setSubmittingError(error.message)
+
+				setTimeout(() => {
+					setSubmittingError(null)
+				}, 3000)
+			}
 		},
+
 		validate: withZodSchema(zCreateIdeaTrpcInput),
 	})
 
 	return (
 		<Segment title='New Idea'>
-			<form
-				onSubmit={e => {
-					e.preventDefault()
-					formik.handleSubmit()
-				}}
-			>
+			<form onSubmit={formik.handleSubmit}>
 				<Input name='name' label='Name' formik={formik} />
 				<Input name='nick' label='Nick' formik={formik} />
 				<Input name='description' label='Description' formik={formik} />
 
 				<Textarea name='text' label='Text' formik={formik} />
 
-				{!formik.isValid && !!formik.submitCount&&(
+				{!formik.isValid && !!formik.submitCount && (
 					<div style={{ color: 'red' }}>Some fileds are invalid</div>
 				)}
-				<button className={styles.button} type='submit'>Create Idea</button>
+
+				{!!submittingError && (
+					<div style={{ color: 'red' }}>{submittingError}</div>
+				)}
+
+				<button
+					type='submit'
+					className={styles.button}
+					disabled={formik.isSubmitting}
+				>
+					{formik.isSubmitting ? 'Submitting...' : 'Create Idea'}
+				</button>
+
+				{successMessage && <div style={{ color: 'green' }}>Idea created!</div>}
 			</form>
 		</Segment>
 	)

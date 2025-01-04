@@ -1,8 +1,8 @@
 import _ from 'lodash'
 
-export const ideas = _.times(100, i => ({
+export const ideas = _.times(10, i => ({
 	nick: `cool-idea-nick-${i}`,
 	name: `Idea ${i}`,
 	description: `Description of idea ${i}...`,
-	text: _.times(100, j => `<p>Text paragraph ${j} of idea ${i}...</p>`).join(''),
+	text: _.times(10, j => `<p>Text paragraph ${j} of idea ${i}...</p>`).join(''),
 }))

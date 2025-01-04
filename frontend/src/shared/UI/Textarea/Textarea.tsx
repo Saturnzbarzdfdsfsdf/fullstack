@@ -1,13 +1,8 @@
 import { FC } from 'react'
-import { type FormikProps } from 'formik'
+
+import { type IInputProps } from '../types/index'
 
 import styles from './Textarea.module.scss'
-
-interface IInputProps {
-	name: string
-	label: string
-	formik: FormikProps<any>
-}
 
 const Textarea: FC<IInputProps> = props => {
 	const { name, label, formik } = props
@@ -29,6 +24,7 @@ const Textarea: FC<IInputProps> = props => {
 			<label htmlFor={name}>{label}</label>
 			<br />
 			<textarea
+				disabled={formik.isSubmitting}
 				className={styles.input}
 				onChange={handleOnChange}
 				onBlur={handleOnBlur}

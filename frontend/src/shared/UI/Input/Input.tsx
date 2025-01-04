@@ -1,11 +1,6 @@
 import { FC } from 'react'
-import { type FormikProps } from 'formik'
 
-interface IInputProps {
-	name: string
-	label: string
-	formik: FormikProps<any>
-}
+import { type IInputProps } from '../types/index'
 
 import styles from './Input.module.scss'
 
@@ -17,11 +12,11 @@ const Input: FC<IInputProps> = props => {
 	const errors = formik.errors[name] as string | undefined
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		void formik.setFieldValue(name, e.target.value)
+		 formik.setFieldValue(name, e.target.value)
 	}
 
 	const handleOnBlur = () => {
-		void formik.setFieldTouched(name)
+		 formik.setFieldTouched(name)
 	}
 
 	return (
@@ -29,8 +24,9 @@ const Input: FC<IInputProps> = props => {
 			<label htmlFor={name}>{label}</label>
 			<br />
 			<input
-				className={styles.input}
 				type='text'
+				className={styles.input}
+				disabled={formik.isSubmitting}
 				onChange={handleOnChange}
 				onBlur={handleOnBlur}
 				value={value}
