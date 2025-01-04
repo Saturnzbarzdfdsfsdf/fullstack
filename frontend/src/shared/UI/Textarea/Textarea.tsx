@@ -10,10 +10,16 @@ interface IInputProps {
 const Textarea: FC<IInputProps> = props => {
 	const { name, label, formik } = props
 
+	const touched = formik.touched[name]
 	const value = formik.values[name]
+	const errors = formik.errors[name] as string | undefined
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		void formik.setFieldValue(name, e.target.value)
+	}
+
+	const handleOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+		void formik.setFieldTouched(name)
 	}
 
 	return (
@@ -23,10 +29,12 @@ const Textarea: FC<IInputProps> = props => {
 			<input
 				type='text'
 				onChange={handleChange}
+				onBlur={handleOnBlur}
 				value={value}
 				name={name}
 				id={name}
 			/>
+			{!!touched && !!errors && <div style={{ color: 'red' }}>{errors}</div>}
 		</div>
 	)
 }
