@@ -2,7 +2,7 @@ import { useParams } from 'react-router'
 
 import { type TIdeaRouteParams } from '../../app/routes/Routes'
 
-import { trpc } from '../../shared/api/trpc'
+import { trpc } from '../../shared/api/trpc/index'
 
 import { Segment } from '../../shared/ui/index'
 

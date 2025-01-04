@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 
 import * as routes from './routes/Routes'
 
-import { TrpcProvider } from '../shared/api/trpc'
+import { TrpcProvider } from './providers/TrpcProvider'
 
 import Layout from './Layout/Layout'
 
