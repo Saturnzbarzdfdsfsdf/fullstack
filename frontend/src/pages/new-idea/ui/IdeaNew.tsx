@@ -1,13 +1,9 @@
+import Segment from '../../../shared/UI/Segment/Segment'
 
-import styles from './IdeaNew.module.scss'
+// import styles from './IdeaNew.module.scss'
 
 const IdeaNew = () => {
-  return (
-		<div>
-			<h1 className={styles.title}>New Idea</h1>
-			<div>Form will be here...</div>
-		</div>
-	)
+	return <Segment title='New Idea'>Form will be here...</Segment>
 }
 
 export default IdeaNew

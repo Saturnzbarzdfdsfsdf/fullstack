@@ -4,6 +4,7 @@ import { getViewIdeaRoute } from '../../../app/routes/Routes'
 
 import { trpc } from '../../../shared/api/trpc'
 
+import Segment from '../../../shared/UI/Segment/Segment'
 import styles from './IdeasList.module.scss'
 
 const IdeasList = () => {
@@ -34,24 +35,26 @@ const IdeasList = () => {
 	}
 
 	return (
-		<div>
-			<h1 className={styles.title}>All Ideas</h1>
+		<Segment title='All Ideas'>
 			<div className={styles.ideas}>
 				{data.ideas.map(idea => (
 					<div className={styles.idea} key={idea.nick}>
-						<h2 className={styles.ideaName}>
-							<Link
-								className={styles.ideaLink}
-								to={getViewIdeaRoute({ ideaNick: idea.nick })}
-							>
-								{idea.name}
-							</Link>
-						</h2>
-						<p className={styles.ideaDescription}>{idea.description}</p>
+						<Segment
+							size={2}
+							title={
+								<Link
+									className={styles.ideaLink}
+									to={getViewIdeaRoute({ ideaNick: idea.nick })}
+								>
+									{idea.name}
+								</Link>
+							}
+							description={idea.description}
+						/>
 					</div>
 				))}
 			</div>
-		</div>
+		</Segment>
 	)
 }
 

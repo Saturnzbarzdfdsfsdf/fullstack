@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 import { type TIdeaRouteParams } from '../../app/routes/Routes'
 
 import { trpc } from '../../shared/api/trpc'
+import Segment from '../../shared/UI/Segment/Segment'
 
 import styles from './IdeaView.module.scss'
 
@@ -28,14 +29,12 @@ const IdeaView = () => {
 	}
 
 	return (
-		<div>
-			<h1 className={styles.title}>{data.idea.name}</h1>
-			<p className={styles.description}>{data.idea.description}</p>
+		<Segment title={data.idea.name} description={data.idea.description}>
 			<div
 				className={styles.text}
 				dangerouslySetInnerHTML={{ __html: data.idea.text }}
 			/>
-		</div>
+		</Segment>
 	)
 }
 

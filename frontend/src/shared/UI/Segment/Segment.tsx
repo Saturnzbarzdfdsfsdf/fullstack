@@ -1,4 +1,4 @@
-import styles from './index.module.scss'
+import styles from './Segment.module.scss'
 
 const Segment = ({
 	title,
@@ -12,6 +12,7 @@ const Segment = ({
 	children?: React.ReactNode
 }) => {
 	return (
+
 		<div className={styles.segment}>
 			{size === 1 ? (
 				<h1 className={styles.title}>{title}</h1>
@@ -21,6 +22,7 @@ const Segment = ({
 			{description && <p className={styles.description}>{description}</p>}
 			{children && <div className={styles.content}>{children}</div>}
 		</div>
+
 	)
 }
 
