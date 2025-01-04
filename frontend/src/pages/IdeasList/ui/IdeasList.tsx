@@ -4,7 +4,8 @@ import { getViewIdeaRoute } from '../../../app/routes/Routes'
 
 import { trpc } from '../../../shared/api/trpc'
 
-import Segment from '../../../shared/UI/Segment/Segment'
+import { Segment } from '../../../shared/ui/index'
+
 import styles from './IdeasList.module.scss'
 
 const IdeasList = () => {
