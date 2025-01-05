@@ -4,6 +4,8 @@ import express from 'express'
 import { applyTrpcToExpressApp } from './lib/trpc'
 import { trpcRouter } from './router'
 
+require('dotenv').config()
+
 const expressApp = express()
 expressApp.use(cors())
 expressApp.get('/ping', (req, res) => {
