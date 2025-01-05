@@ -1,10 +1,10 @@
+import { format } from 'date-fns'
 import { useParams } from 'react-router'
 
-import { type TIdeaRouteParams } from '../../app/routes/Routes'
-
 import { trpc } from '../../shared/api/trpc/index'
-
 import { Segment } from '../../shared/ui/index'
+
+import { type TIdeaRouteParams } from '../../app/routes/Routes'
 
 import styles from './IdeaView.module.scss'
 
@@ -31,6 +31,9 @@ const IdeaView = () => {
 
 	return (
 		<Segment title={data.idea.name} description={data.idea.description}>
+			<div className={styles.createdAt}>
+				Created At: {format(data.idea.createdAt, 'dd-MM-yyyy')}
+			</div>
 			<div
 				className={styles.text}
 				dangerouslySetInnerHTML={{ __html: data.idea.text }}
