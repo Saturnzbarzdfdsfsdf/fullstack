@@ -5,7 +5,8 @@ import { type IInputProps } from '../../types/index'
 import styles from './Input.module.scss'
 
 const Input: FC<IInputProps> = props => {
-	const { name, label, formik } = props
+	
+	const { name, label, formik, type } = props
 
 	const value = formik.values[name]
 	const touched = formik.touched[name]
@@ -37,7 +38,7 @@ const Input: FC<IInputProps> = props => {
 					[styles.input]: true,
 					[styles.invalid]: invalid,
 				})}
-				type='text'
+				type={type}
 				disabled={formik.isSubmitting}
 				onChange={handleOnChange}
 				onBlur={handleOnBlur}
