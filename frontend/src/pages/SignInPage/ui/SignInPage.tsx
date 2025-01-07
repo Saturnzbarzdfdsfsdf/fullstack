@@ -16,47 +16,34 @@ import {
 	Button,
 	FormItems,
 } from '../../../shared/ui/index'
+
 import { getAllIdeasRoute } from '../../../app/routes/Routes'
 
-const SignUpPage = () => {
+const SignInPage = () => {
 	const navigate = useNavigate()
-
 	const trpcUtils = trpc.useContext()
-	
+
 	const [submittingError, setSubmittingError] = useState<string | null>(null)
 
-	const signUp = trpc.signUp.useMutation()
+	const signIn = trpc.signIn.useMutation()
+
 	const formik = useFormik({
 		initialValues: {
 			nick: '',
 			password: '',
-			passwordAgain: '',
 		},
-		validate: withZodSchema(
-			zSignUpTrpcInput
-				.extend({
-					passwordAgain: z.string().min(1),
-				})
-				.superRefine((val, ctx) => {
-					if (val.password !== val.passwordAgain) {
-						ctx.addIssue({
-							code: z.ZodIssueCode.custom,
-							message: 'Passwords must be the same',
-							path: ['passwordAgain'],
-						})
-					}
-				})
-		),
+		validate: withZodSchema(zSignUpTrpcInput),
+		
 		onSubmit: async values => {
 			try {
 				setSubmittingError(null)
-				
-				const { token } = await signUp.mutateAsync(values)
+
+				const { token } = await signIn.mutateAsync(values)
 				Cookies.set('token', token, { expires: 99999 })
 				
 				void trpcUtils.invalidate()
 				navigate(getAllIdeasRoute())
-				
+
 			} catch (err: any) {
 				setSubmittingError(err.message)
 			}
@@ -64,7 +51,7 @@ const SignUpPage = () => {
 	})
 
 	return (
-		<Segment title='Sign Up'>
+		<Segment title='Sign In'>
 			<form onSubmit={formik.handleSubmit}>
 				<FormItems>
 					<Input label='Nick' name='nick' formik={formik} />
@@ -76,23 +63,16 @@ const SignUpPage = () => {
 						formik={formik}
 					/>
 
-					<Input
-						label='Password again'
-						name='passwordAgain'
-						type='password'
-						formik={formik}
-					/>
-
 					{!formik.isValid && !!formik.submitCount && (
 						<Alert color='red'>Some fields are invalid</Alert>
 					)}
 					{submittingError && <Alert color='red'>{submittingError}</Alert>}
 
-					<Button loading={formik.isSubmitting}>Sign Up</Button>
+					<Button loading={formik.isSubmitting}>Sign In</Button>
 				</FormItems>
 			</form>
 		</Segment>
 	)
 }
 
-export default SignUpPage
+export default SignInPage
