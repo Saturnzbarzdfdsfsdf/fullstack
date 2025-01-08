@@ -3,38 +3,28 @@ import { format } from 'date-fns'
 
 import { trpc } from '../../shared/api/trpc/index'
 import { Segment, LinkButton } from '../../shared/ui/index'
-
 import { getEditIdeaRoute } from '../../app/routes/Routes'
-
-import { useMe } from '../../app/Context/ctx'
+import { withPageWrapper } from '../../shared/components/PageWrapper'
 
 import { type TIdeaRouteParams } from '../../app/routes/Routes'
 
 import styles from './IdeaView.module.scss'
 
-const IdeaView = () => {
-	const { ideaNick } = useParams() as TIdeaRouteParams
-
-	const getIdeaResult = trpc.getIdea.useQuery({
-		ideaNick,
-	})
-
-	const me = useMe()
-
-	if (getIdeaResult.isLoading || getIdeaResult.isFetching) {
-		return <span>Loading...</span>
-	}
-
-	if (getIdeaResult.isError) {
-		return <span>Error: {getIdeaResult.error.message}</span>
-	}
-
-	if (!getIdeaResult.data.idea) {
-		return <span>Idea not found</span>
-	}
-
-	const idea = getIdeaResult.data.idea
-
+const IdeaView = withPageWrapper({
+	useQuery: () => {
+		const { ideaNick } = useParams() as TIdeaRouteParams
+		return trpc.getIdea.useQuery({
+			ideaNick,
+		})
+	},
+	checkExists: ({ queryResult }) => !!queryResult.data?.idea,
+	checkExistsMessage: 'Idea not found',
+	setProps: ({ queryResult, ctx }) => ({
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		idea: queryResult.data?.idea!,
+		me: ctx.me,
+	}),
+})(({ idea, me }) => {
 	return (
 		<Segment title={idea.name} description={idea.description}>
 			<div className={styles.createdAt}>
@@ -55,6 +45,6 @@ const IdeaView = () => {
 			)}
 		</Segment>
 	)
-}
+})
 
 export default IdeaView

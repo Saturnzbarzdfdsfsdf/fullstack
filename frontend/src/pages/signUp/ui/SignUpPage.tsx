@@ -15,10 +15,13 @@ import {
 	Button,
 	FormItems,
 } from '../../../shared/ui/index'
-import { getAllIdeasRoute } from '../../../app/routes/Routes'
 
-const SignUpPage = () => {
-	const navigate = useNavigate()
+import { withPageWrapper } from '../../../shared/components/PageWrapper'
+
+const SignUpPage = withPageWrapper({
+  redirectAuthorized: true,
+})(() => {
+	
 	const trpcUtils = trpc.useContext()
 
 	const signUp = trpc.signUp.useMutation()
@@ -50,7 +53,6 @@ const SignUpPage = () => {
 			Cookies.set('token', token, { expires: 99999 })
 			
 			void trpcUtils.invalidate()
-			navigate(getAllIdeasRoute())
 		},
 	})
 
@@ -81,6 +83,6 @@ const SignUpPage = () => {
 			</form>
 		</Segment>
 	)
-}
+})
 
 export default SignUpPage

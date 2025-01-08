@@ -1,4 +1,5 @@
 import { trpc } from '../../../shared/api/trpc/index'
+import { withPageWrapper } from '../../../shared/components/PageWrapper'
 
 import { useForm } from '../../../shared/Hooks/useForm'
 
@@ -6,9 +7,9 @@ import { Input, Segment, Textarea, Alert, Button, FormItems } from '../../../sha
 
 import { zCreateIdeaTrpcInput } from '@full-app/backend/src/router/createIdea/input'
 
-const IdeaNew = () => {
-	
-
+const IdeaNew =  withPageWrapper({
+  authorizedOnly: true,
+})(() => {
 	const createIdea = trpc.createIdea.useMutation()
 
   const { formik, buttonProps, alertProps } = useForm({
@@ -46,6 +47,6 @@ const IdeaNew = () => {
 			</form>
 		</Segment>
 	)
-}
+})
 
 export default IdeaNew

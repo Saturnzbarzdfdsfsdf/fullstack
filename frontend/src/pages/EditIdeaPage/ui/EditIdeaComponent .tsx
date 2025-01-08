@@ -1,13 +1,9 @@
-import { FC } from 'react'
-
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import pick from 'lodash/pick'
 
-import { useMe } from '../../../app/Context/ctx'
 import { useForm } from '../../../shared/Hooks/useForm'
 
 import { zUpdateIdeaTrpcInput } from '@full-app/backend/src/router/updateIdea/input'
-import { getViewIdeaRoute } from '../../../app/routes/Routes'
 
 import {
 	Input,
@@ -18,21 +14,33 @@ import {
 	FormItems,
 } from '../../../shared/ui/index'
 
-import type { TrpcRouterOutput } from '@full-app/backend/src/router'
 import type { EditIdeaRouteParams } from '../../../app/routes/Routes'
 
 import { trpc } from '../../../shared/api/trpc/index'
+import { withPageWrapper } from '../../../shared/components/PageWrapper'
 
-type TIdea = NonNullable<TrpcRouterOutput['getIdea']['idea']>
+export const EditIdeaPage = withPageWrapper({
+	authorizedOnly: true,
 
-interface IEditIdeaComponent {
+	useQuery: () => {
+		const { ideaNick } = useParams() as EditIdeaRouteParams
+		return trpc.getIdea.useQuery({
+			ideaNick,
+		})
+	},
 
-	idea: TIdea
-}
+	checkExists: ({ queryResult }) => !!queryResult.data.idea,
+	checkExistsMessage: 'Idea not found',
 
-const EditIdeaComponent: FC<IEditIdeaComponent> = ({ idea }) => {
-	const navigate = useNavigate()
+	checkAccess: ({ queryResult, ctx }) =>
+		!!ctx.me && ctx.me.id === queryResult.data.idea?.authorId,
+	checkAccessMessage: 'An idea can only be edited by the author',
 
+	setProps: ({ queryResult }) => ({
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		idea: queryResult.data.idea!,
+	}),
+})(({ idea }) => {
 	const updateIdea = trpc.updateIdea.useMutation()
 
 	const { formik, buttonProps, alertProps } = useForm({
@@ -42,7 +50,6 @@ const EditIdeaComponent: FC<IEditIdeaComponent> = ({ idea }) => {
 
 		onSubmit: async values => {
 			await updateIdea.mutateAsync({ ideaId: idea.id, ...values })
-			navigate(getViewIdeaRoute({ ideaNick: values.nick }))
 		},
 
 		resetOnSuccess: false,
@@ -55,11 +62,7 @@ const EditIdeaComponent: FC<IEditIdeaComponent> = ({ idea }) => {
 				<FormItems>
 					<Input label='Name' name='name' formik={formik} />
 					<Input label='Nick' name='nick' formik={formik} />
-					<Input
-						label='Description'
-						name='description'
-						formik={formik}
-					/>
+					<Input label='Description' name='description' formik={formik} />
 					<Textarea label='Text' name='text' formik={formik} />
 
 					<Alert {...alertProps} />
@@ -68,38 +71,4 @@ const EditIdeaComponent: FC<IEditIdeaComponent> = ({ idea }) => {
 			</form>
 		</Segment>
 	)
-}
-
-export const EditIdeaPage = () => {
-	const { ideaNick } = useParams() as EditIdeaRouteParams
-
-	const getIdeaResult = trpc.getIdea.useQuery({
-		ideaNick,
-	})
-
-	const me = useMe()
-
-	if (getIdeaResult.isLoading || getIdeaResult.isFetching) {
-		return <span>Loading...</span>
-	}
-
-	if (getIdeaResult.isError) {
-		return <span>Error: {getIdeaResult.error.message}</span>
-	}
-
-	if (!getIdeaResult.data.idea) {
-		return <span>Idea not found</span>
-	}
-
-	const idea = getIdeaResult.data.idea
-
-	if (!me) {
-		return <span>Only for authorized</span>
-	}
-
-	if (me.id !== idea.authorId) {
-		return <span>An idea can only be edited by the author</span>
-	}
-
-	return <EditIdeaComponent idea={idea} />
-}
+})

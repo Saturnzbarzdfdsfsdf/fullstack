@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom'
-
 import Cookies from 'js-cookie'
 
 import { useForm } from '../../../shared/Hooks/useForm'
@@ -15,10 +13,12 @@ import {
 	FormItems,
 } from '../../../shared/ui/index'
 
-import { getAllIdeasRoute } from '../../../app/routes/Routes'
+import { withPageWrapper } from '../../../shared/components/PageWrapper'
 
-const SignInPage = () => {
-	const navigate = useNavigate()
+const SignInPage = withPageWrapper({
+  redirectAuthorized: true,
+})(() => {
+
 	const trpcUtils = trpc.useContext()
 
 	const signIn = trpc.signIn.useMutation()
@@ -37,8 +37,6 @@ const SignInPage = () => {
 				Cookies.set('token', token, { expires: 99999 })
 
 				void trpcUtils.invalidate()
-				navigate(getAllIdeasRoute())
-			
 		},
 	})
 
@@ -62,6 +60,6 @@ const SignInPage = () => {
 			</form>
 		</Segment>
 	)
-}
+})
 
 export default SignInPage
