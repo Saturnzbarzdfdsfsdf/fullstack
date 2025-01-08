@@ -29,6 +29,7 @@ const SignUpPage = () => {
 			password: '',
 			passwordAgain: '',
 		},
+
 		validationSchema: zSignUpTrpcInput
 			.extend({
 				passwordAgain: z.string().min(1),
@@ -47,6 +48,7 @@ const SignUpPage = () => {
 		onSubmit: async values => {
 			const { token } = await signUp.mutateAsync(values)
 			Cookies.set('token', token, { expires: 99999 })
+			
 			void trpcUtils.invalidate()
 			navigate(getAllIdeasRoute())
 		},

@@ -1,6 +1,9 @@
+import { FC } from 'react'
+
 import { useNavigate, useParams } from 'react-router-dom'
 import pick from 'lodash/pick'
 
+import { useMe } from '../../../app/Context/ctx'
 import { useForm } from '../../../shared/Hooks/useForm'
 
 import { zUpdateIdeaTrpcInput } from '@full-app/backend/src/router/updateIdea/input'
@@ -20,25 +23,28 @@ import type { EditIdeaRouteParams } from '../../../app/routes/Routes'
 
 import { trpc } from '../../../shared/api/trpc/index'
 
-const EditIdeaComponent = ({
-	idea,
-}: {
-	idea: NonNullable<TrpcRouterOutput['getIdea']['idea']>
-}) => {
+type TIdea = NonNullable<TrpcRouterOutput['getIdea']['idea']>
+
+interface IEditIdeaComponent {
+
+	idea: TIdea
+}
+
+const EditIdeaComponent: FC<IEditIdeaComponent> = ({ idea }) => {
 	const navigate = useNavigate()
-		
+
 	const updateIdea = trpc.updateIdea.useMutation()
 
 	const { formik, buttonProps, alertProps } = useForm({
 		initialValues: pick(idea, ['name', 'nick', 'description', 'text']),
-		
+
 		validationSchema: zUpdateIdeaTrpcInput.omit({ ideaId: true }),
-		
+
 		onSubmit: async values => {
 			await updateIdea.mutateAsync({ ideaId: idea.id, ...values })
 			navigate(getViewIdeaRoute({ ideaNick: values.nick }))
 		},
-		
+
 		resetOnSuccess: false,
 		showValidationAlert: true,
 	})
@@ -52,14 +58,12 @@ const EditIdeaComponent = ({
 					<Input
 						label='Description'
 						name='description'
-						maxWidth={500}
 						formik={formik}
 					/>
 					<Textarea label='Text' name='text' formik={formik} />
 
 					<Alert {...alertProps} />
 					<Button {...buttonProps}>Update Idea</Button>
-					
 				</FormItems>
 			</form>
 		</Segment>
@@ -72,15 +76,10 @@ export const EditIdeaPage = () => {
 	const getIdeaResult = trpc.getIdea.useQuery({
 		ideaNick,
 	})
-	
-	const getMeResult = trpc.getMe.useQuery()
 
-	if (
-		getIdeaResult.isLoading ||
-		getIdeaResult.isFetching ||
-		getMeResult.isLoading ||
-		getMeResult.isFetching
-	) {
+	const me = useMe()
+
+	if (getIdeaResult.isLoading || getIdeaResult.isFetching) {
 		return <span>Loading...</span>
 	}
 
@@ -88,16 +87,11 @@ export const EditIdeaPage = () => {
 		return <span>Error: {getIdeaResult.error.message}</span>
 	}
 
-	if (getMeResult.isError) {
-		return <span>Error: {getMeResult.error.message}</span>
-	}
-
 	if (!getIdeaResult.data.idea) {
 		return <span>Idea not found</span>
 	}
 
 	const idea = getIdeaResult.data.idea
-	const me = getMeResult.data.me
 
 	if (!me) {
 		return <span>Only for authorized</span>

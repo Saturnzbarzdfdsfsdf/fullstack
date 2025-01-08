@@ -1,10 +1,12 @@
-import { format } from 'date-fns'
 import { useParams } from 'react-router'
+import { format } from 'date-fns'
 
 import { trpc } from '../../shared/api/trpc/index'
 import { Segment, LinkButton } from '../../shared/ui/index'
 
 import { getEditIdeaRoute } from '../../app/routes/Routes'
+
+import { useMe } from '../../app/Context/ctx'
 
 import { type TIdeaRouteParams } from '../../app/routes/Routes'
 
@@ -17,14 +19,9 @@ const IdeaView = () => {
 		ideaNick,
 	})
 
-	const getMeResult = trpc.getMe.useQuery()
+	const me = useMe()
 
-	if (
-		getIdeaResult.isLoading ||
-		getIdeaResult.isFetching ||
-		getMeResult.isLoading ||
-		getMeResult.isFetching
-	) {
+	if (getIdeaResult.isLoading || getIdeaResult.isFetching) {
 		return <span>Loading...</span>
 	}
 
@@ -32,16 +29,11 @@ const IdeaView = () => {
 		return <span>Error: {getIdeaResult.error.message}</span>
 	}
 
-	if (getMeResult.isError) {
-		return <span>Error: {getMeResult.error.message}</span>
-	}
-
 	if (!getIdeaResult.data.idea) {
 		return <span>Idea not found</span>
 	}
 
-	  const idea = getIdeaResult.data.idea
-		const me = getMeResult.data.me
+	const idea = getIdeaResult.data.idea
 
 	return (
 		<Segment title={idea.name} description={idea.description}>
@@ -61,7 +53,6 @@ const IdeaView = () => {
 					</LinkButton>
 				</div>
 			)}
-			
 		</Segment>
 	)
 }

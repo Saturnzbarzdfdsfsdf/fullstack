@@ -1,5 +1,7 @@
 import { Link, Outlet } from 'react-router-dom'
 
+import { useMe } from '../Context/ctx'
+
 import {
 	getAllIdeasRoute,
 	getNewIdeasRoute,
@@ -8,12 +10,11 @@ import {
 	getSignUpRoute,
 } from '../routes/Routes'
 
-import { trpc } from '../../shared/api/trpc'
 
 import styles from './Layout.module.scss'
 
 const Layout = () => {
-	const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery()
+	const me = useMe()
 
 	return (
 		<div className={styles.layout}>
@@ -26,9 +27,8 @@ const Layout = () => {
 						</Link>
 					</li>
 
-					{isLoading || isFetching || isError ? null : data.me ? (
+					{me ? (
 						<>
-
 							<li className={styles.item}>
 								<Link className={styles.link} to={getNewIdeasRoute()}>
 									Add Idea
@@ -37,14 +37,12 @@ const Layout = () => {
 
 							<li className={styles.item}>
 								<Link className={styles.link} to={getSignOutRoute()}>
-									Log Out ({data.me.nick})
+									Log Out ({me.nick})
 								</Link>
 							</li>
-
 						</>
 					) : (
 						<>
-
 							<li className={styles.item}>
 								<Link className={styles.link} to={getSignUpRoute()}>
 									Sign Up
@@ -57,7 +55,6 @@ const Layout = () => {
 								</Link>
 							</li>
 						</>
-
 					)}
 				</ul>
 			</div>
@@ -65,7 +62,6 @@ const Layout = () => {
 			<div className={styles.content}>
 				<Outlet />
 			</div>
-
 		</div>
 	)
 }

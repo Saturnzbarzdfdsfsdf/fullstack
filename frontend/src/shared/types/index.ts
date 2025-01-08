@@ -1,1 +1,1 @@
-export { type IInputProps } from './formTypes'
+export { type IInputProps, type IFormValues } from './formTypes'

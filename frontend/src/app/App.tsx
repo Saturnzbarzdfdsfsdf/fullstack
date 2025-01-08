@@ -6,6 +6,8 @@ import { TrpcProvider } from './providers/TrpcProvider'
 
 import Layout from './Layout/Layout'
 
+import { AppContextProvider } from './Context/ctx'
+
 import { IdeasList } from '../pages/IdeasList'
 import { IdeaNew } from '../pages/new-idea'
 
@@ -21,7 +23,9 @@ import '../shared/styles/global.scss'
 const App = () => {
 	return (
 		<TrpcProvider>
+			<AppContextProvider>
 			<BrowserRouter>
+
 				<Routes>
 					
 					<Route path={routes.getSignOutRoute()} element={<SignOutPage />} />
@@ -49,7 +53,9 @@ const App = () => {
 					</Route>
 
 				</Routes>
+
 			</BrowserRouter>
+			</AppContextProvider>
 		</TrpcProvider>
 	)
 }
