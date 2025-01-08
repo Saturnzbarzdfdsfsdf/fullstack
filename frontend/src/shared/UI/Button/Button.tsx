@@ -3,7 +3,7 @@ import cn from 'classnames'
 
 import styles from './Button.module.scss'
 
-interface IButtonProps {
+export interface IButtonProps {
 	children: React.ReactNode
 	loading?: boolean
 }

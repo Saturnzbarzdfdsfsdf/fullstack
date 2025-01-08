@@ -3,12 +3,18 @@ import cn from 'classnames'
 
 import styles from './Alert.module.scss'
 
-interface IAlertProps {
+export interface IAlertProps {
 	color: 'red' | 'green'
 	children: React.ReactNode
+	hidden?: boolean
 }
 
-const Alert: FC<IAlertProps> = ({ color, children }) => {
+const Alert: FC<IAlertProps> = ({ color, children, hidden }) => {
+	
+	if (hidden) {
+		return null
+	}
+
 	return (
 		<div
 			className={cn({

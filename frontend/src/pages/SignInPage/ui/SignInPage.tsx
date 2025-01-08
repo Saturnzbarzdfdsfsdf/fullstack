@@ -1,12 +1,10 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Cookies from 'js-cookie'
-import { z } from 'zod'
-import { useFormik } from 'formik'
-import { withZodSchema } from 'formik-validator-zod'
 
-import { zSignUpTrpcInput } from '@full-app/backend/src/router/signUp/input'
+import { useForm } from '../../../shared/Hooks/useForm'
+
+import { zSignInTrpcInput } from '@full-app/backend/src/router/signIn/input'
 import { trpc } from '../../../shared/api/trpc/index'
 
 import {
@@ -23,30 +21,24 @@ const SignInPage = () => {
 	const navigate = useNavigate()
 	const trpcUtils = trpc.useContext()
 
-	const [submittingError, setSubmittingError] = useState<string | null>(null)
-
 	const signIn = trpc.signIn.useMutation()
 
-	const formik = useFormik({
+	const { formik, buttonProps, alertProps } = useForm({
 		initialValues: {
 			nick: '',
 			password: '',
 		},
-		validate: withZodSchema(zSignUpTrpcInput),
-		
-		onSubmit: async values => {
-			try {
-				setSubmittingError(null)
 
+		validationSchema: zSignInTrpcInput,
+
+		onSubmit: async values => {
+	
 				const { token } = await signIn.mutateAsync(values)
 				Cookies.set('token', token, { expires: 99999 })
-				
+
 				void trpcUtils.invalidate()
 				navigate(getAllIdeasRoute())
-
-			} catch (err: any) {
-				setSubmittingError(err.message)
-			}
+			
 		},
 	})
 
@@ -63,12 +55,9 @@ const SignInPage = () => {
 						formik={formik}
 					/>
 
-					{!formik.isValid && !!formik.submitCount && (
-						<Alert color='red'>Some fields are invalid</Alert>
-					)}
-					{submittingError && <Alert color='red'>{submittingError}</Alert>}
+					<Alert {...alertProps} />
+					<Button {...buttonProps}>Sign In</Button>
 
-					<Button loading={formik.isSubmitting}>Sign In</Button>
 				</FormItems>
 			</form>
 		</Segment>

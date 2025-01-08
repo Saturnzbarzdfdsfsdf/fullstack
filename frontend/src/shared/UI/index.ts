@@ -6,3 +6,9 @@ export {default as Button} from './Button/Button'
 export { default as FormItems } from './FormItems/FormItems'
 export { default as LinkButton } from './LinkButton/LinkButton'
 
+
+
+// types
+
+export type { IAlertProps } from './Alert/Alert'
+export type { IButtonProps } from './Button/Button'
