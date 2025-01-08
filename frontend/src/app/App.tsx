@@ -11,6 +11,7 @@ import { IdeaNew } from '../pages/new-idea'
 
 import ViewIdea from '../widget/IdeaView/IdeaView'
 
+import { EditIdeaPage } from '../pages/EditIdeaPage/ui/EditIdeaComponent '
 import { SignUpPage } from '../pages/signUp/index'
 import { SignInPage } from '../pages/SignInPage/index'
 import { SignOutPage } from '../pages/SignOut/index'
@@ -22,10 +23,11 @@ const App = () => {
 		<TrpcProvider>
 			<BrowserRouter>
 				<Routes>
-
+					
 					<Route path={routes.getSignOutRoute()} element={<SignOutPage />} />
-
+					
 					<Route element={<Layout />}>
+
 						<Route path={routes.getAllIdeasRoute()} element={<IdeasList />} />
 
 						<Route path={routes.getNewIdeasRoute()} element={<IdeaNew />} />
@@ -38,7 +40,14 @@ const App = () => {
 						<Route path={routes.getSignUpRoute()} element={<SignUpPage />} />
 
 						<Route path={routes.getSignInRoute()} element={<SignInPage />} />
+						
+						<Route
+							path={routes.getEditIdeaRoute(routes.editIdeaRouteParams)}
+							element={<EditIdeaPage />}
+						/>
+
 					</Route>
+
 				</Routes>
 			</BrowserRouter>
 		</TrpcProvider>
