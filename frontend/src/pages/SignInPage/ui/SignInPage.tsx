@@ -2,7 +2,7 @@ import Cookies from 'js-cookie'
 
 import { useForm } from '../../../shared/Hooks/useForm'
 
-import { zSignInTrpcInput } from '@full-app/backend/src/router/signIn/input'
+import { zSignInTrpcInput } from '@full-app/backend/src/router/auth/signIn/input'
 import { trpc } from '../../../shared/api/trpc/index'
 
 import {

@@ -3,7 +3,7 @@ import pick from 'lodash/pick'
 
 import { useForm } from '../../../shared/Hooks/useForm'
 
-import { zUpdateIdeaTrpcInput } from '@full-app/backend/src/router/updateIdea/input'
+import { zUpdateIdeaTrpcInput } from '@full-app/backend/src/router/idea/updateIdea/input'
 
 import {
 	Input,
@@ -36,10 +36,16 @@ export const EditIdeaPage = withPageWrapper({
 		!!ctx.me && ctx.me.id === queryResult.data.idea?.authorId,
 	checkAccessMessage: 'An idea can only be edited by the author',
 
-	setProps: ({ queryResult }) => ({
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		idea: queryResult.data.idea!,
-	}),
+	setProps: ({ queryResult, ctx, checkExists, checkAccess }) => {
+		const idea = checkExists(queryResult.data.idea, 'Idea not found')
+		checkAccess(
+			ctx.me?.id === idea.authorId,
+			'An idea can only be edited by the author'
+		)
+		return {
+			idea,
+		}
+	},
 })(({ idea }) => {
 	const updateIdea = trpc.updateIdea.useMutation()
 

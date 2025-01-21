@@ -17,6 +17,7 @@ import { EditIdeaPage } from '../pages/EditIdeaPage/ui/EditIdeaComponent '
 import { SignUpPage } from '../pages/signUp/index'
 import { SignInPage } from '../pages/SignInPage/index'
 import { SignOutPage } from '../pages/SignOut/index'
+import { NotFoundPage } from '../pages/NotFoundPage/NotFoundPage'
 
 import '../shared/styles/global.scss'
 
@@ -50,6 +51,7 @@ const App = () => {
 							element={<EditIdeaPage />}
 						/>
 
+						<Route path='*' element={<NotFoundPage />}/>
 					</Route>
 
 				</Routes>

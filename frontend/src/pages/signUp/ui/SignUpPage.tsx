@@ -1,11 +1,9 @@
-import { useNavigate } from 'react-router-dom'
-
 import { z } from 'zod'
 import Cookies from 'js-cookie'
 
 import { useForm } from '../../../shared/Hooks/useForm'
 
-import { zSignUpTrpcInput } from '@full-app/backend/src/router/signUp/input'
+import { zSignUpTrpcInput } from '@full-app/backend/src/router/auth/signUp/input'
 import { trpc } from '../../../shared/api/trpc/index'
 
 import {

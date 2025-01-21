@@ -5,7 +5,7 @@ import { useForm } from '../../../shared/Hooks/useForm'
 
 import { Input, Segment, Textarea, Alert, Button, FormItems } from '../../../shared/ui/index'
 
-import { zCreateIdeaTrpcInput } from '@full-app/backend/src/router/createIdea/input'
+import { zCreateIdeaTrpcInput } from '@full-app/backend/src/router/idea/createIdea/input'
 
 const IdeaNew =  withPageWrapper({
   authorizedOnly: true,

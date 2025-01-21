@@ -5,20 +5,47 @@ import {
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { ErrorPageComponent } from '../../pages/ErrorPage'
+import { NotFoundPage } from '../../pages/NotFoundPage/NotFoundPage'
 import { useAppContext, type AppContext } from '../../app/Context/ctx'
 import { getAllIdeasRoute } from '../../app/routes/Routes'
 
+class CheckExistsError extends Error {}
+const checkExistsFn = <T,>(value: T, message?: string): NonNullable<T> => {
+	if (!value) {
+		throw new CheckExistsError(message)
+	}
+	return value
+}
+
+class CheckAccessError extends Error {}
+const checkAccessFn = <T,>(value: T, message?: string): void => {
+	if (!value) {
+		throw new CheckAccessError(message)
+	}
+}
+
+
+
 type Props = Record<string, any>
+
 type QueryResult = UseTRPCQueryResult<any, any>
+
 type QuerySuccessResult<TQueryResult extends QueryResult> =
 	UseTRPCQuerySuccessResult<NonNullable<TQueryResult['data']>, null>
-type HelperProps<TQueryResult extends QueryResult | undefined> = {
+
+	type HelperProps<TQueryResult extends QueryResult | undefined> = {
 	ctx: AppContext
 	queryResult: TQueryResult extends QueryResult
 		? QuerySuccessResult<TQueryResult>
 		: undefined
 }
+
+type SetPropsProps<TQueryResult extends QueryResult | undefined> =
+	HelperProps<TQueryResult> & {
+		checkExists: typeof checkExistsFn
+		checkAccess: typeof checkAccessFn
+	}
+
 type PageWrapperProps<
 	TProps extends Props,
 	TQueryResult extends QueryResult | undefined
@@ -34,12 +61,13 @@ type PageWrapperProps<
 	checkExistsTitle?: string
 	checkExistsMessage?: string
 	useQuery?: () => TQueryResult
-	setProps?: (helperProps: HelperProps<TQueryResult>) => TProps
+	setProps?: (setPropsProps: SetPropsProps<TQueryResult>) => TProps
 	Page: React.FC<TProps>
 }
 
+
 const PageWrapper = <
-	TProps extends Props = {},
+	TProps extends Props = object,
 	TQueryResult extends QueryResult | undefined = undefined
 >({
 	authorizedOnly,
@@ -53,9 +81,11 @@ const PageWrapper = <
 	checkExistsTitle = 'Не найдено',
 	checkExistsMessage = 'Эта страница не существует',
 	useQuery,
+	
 	setProps,
 	Page,
 }: PageWrapperProps<TProps, TQueryResult>) => {
+
 	const navigate = useNavigate()
 	const ctx = useAppContext()
 	const queryResult = useQuery?.()
@@ -74,7 +104,7 @@ const PageWrapper = <
 
 	if (queryResult?.isError) {
 		return (
-			<ErrorPageComponent
+			<NotFoundPage
 				message={
 					queryResult.error.message || 'Произошла непредвиденная ошибка.'
 				}
@@ -84,7 +114,7 @@ const PageWrapper = <
 
 	if (authorizedOnly && !ctx.me) {
 		return (
-			<ErrorPageComponent
+			<NotFoundPage
 				title={authorizedOnlyTitle}
 				message={authorizedOnlyMessage}
 			/>
@@ -95,7 +125,7 @@ const PageWrapper = <
 
 	if (checkAccess && !checkAccess(helperProps)) {
 		return (
-			<ErrorPageComponent
+			<NotFoundPage
 				title={checkAccessTitle}
 				message={checkAccessMessage}
 			/>
@@ -104,19 +134,44 @@ const PageWrapper = <
 
 	if (checkExists && !checkExists(helperProps)) {
 		return (
-			<ErrorPageComponent
+			<NotFoundPage
 				title={checkExistsTitle}
 				message={checkExistsMessage}
 			/>
 		)
 	}
 
-	const props = setProps?.(helperProps) as TProps
-	return <Page {...props} />
+	  try {
+			const props = setProps?.({
+				...helperProps,
+				checkExists: checkExistsFn,
+				checkAccess: checkAccessFn,
+			}) as TProps
+			return <Page {...props} />
+		} catch (error) {
+			if (error instanceof CheckExistsError) {
+				return (
+					<NotFoundPage
+						title={checkExistsTitle}
+						message={error.message || checkExistsMessage}
+					/>
+				)
+			}
+			if (error instanceof CheckAccessError) {
+				return (
+					<NotFoundPage
+						title={checkAccessTitle}
+						message={error.message || checkAccessMessage}
+					/>
+				)
+			}
+			throw error
+		}
+
 }
 
 export const withPageWrapper = <
-	TProps extends Props = {},
+	TProps extends Props = object,
 	TQueryResult extends QueryResult | undefined = undefined
 >(
 	pageWrapperProps: Omit<PageWrapperProps<TProps, TQueryResult>, 'Page'>
