@@ -18,6 +18,7 @@ import { SignUpPage } from '../pages/signUp/index'
 import { SignInPage } from '../pages/SignInPage/index'
 import { SignOutPage } from '../pages/SignOut/index'
 import { NotFoundPage } from '../pages/NotFoundPage/NotFoundPage'
+import { EditProfilePage } from '../pages/EditProfilePage/EditProfile'
 
 import '../shared/styles/global.scss'
 
@@ -25,38 +26,38 @@ const App = () => {
 	return (
 		<TrpcProvider>
 			<AppContextProvider>
-			<BrowserRouter>
+				<BrowserRouter>
+					<Routes>
+						<Route path={routes.getSignOutRoute()} element={<SignOutPage />} />
 
-				<Routes>
-					
-					<Route path={routes.getSignOutRoute()} element={<SignOutPage />} />
-					
-					<Route element={<Layout />}>
+						<Route element={<Layout />}>
+							<Route path={routes.getAllIdeasRoute()} element={<IdeasList />} />
 
-						<Route path={routes.getAllIdeasRoute()} element={<IdeasList />} />
+							<Route path={routes.getNewIdeasRoute()} element={<IdeaNew />} />
 
-						<Route path={routes.getNewIdeasRoute()} element={<IdeaNew />} />
+							<Route
+								path={routes.getEditProfileRoute()}
+								element={<EditProfilePage />}
+							/>
 
-						<Route
-							path={routes.getViewIdeaRoute(routes.IdeaRouteParams)}
-							element={<ViewIdea />}
-						/>
+							<Route
+								path={routes.getViewIdeaRoute(routes.IdeaRouteParams)}
+								element={<ViewIdea />}
+							/>
 
-						<Route path={routes.getSignUpRoute()} element={<SignUpPage />} />
+							<Route path={routes.getSignUpRoute()} element={<SignUpPage />} />
 
-						<Route path={routes.getSignInRoute()} element={<SignInPage />} />
-						
-						<Route
-							path={routes.getEditIdeaRoute(routes.editIdeaRouteParams)}
-							element={<EditIdeaPage />}
-						/>
+							<Route path={routes.getSignInRoute()} element={<SignInPage />} />
 
-						<Route path='*' element={<NotFoundPage />}/>
-					</Route>
+							<Route
+								path={routes.getEditIdeaRoute(routes.editIdeaRouteParams)}
+								element={<EditIdeaPage />}
+							/>
 
-				</Routes>
-
-			</BrowserRouter>
+							<Route path='*' element={<NotFoundPage />} />
+						</Route>
+					</Routes>
+				</BrowserRouter>
 			</AppContextProvider>
 		</TrpcProvider>
 	)

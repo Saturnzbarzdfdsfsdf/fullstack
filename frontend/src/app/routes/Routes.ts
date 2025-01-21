@@ -10,6 +10,7 @@ export const getNewIdeasRoute = () => '/ideas/new'
 export const getSignUpRoute = () => '/sign-up'
 export const getSignInRoute = () => '/sign-in'
 export const getSignOutRoute = () => '/sign-out'
+export const getEditProfileRoute = () => '/edit-profile'
 
 export const getViewIdeaRoute = ({ ideaNick }: TIdeaRouteParams) =>
 	`/ideas/${ideaNick}`

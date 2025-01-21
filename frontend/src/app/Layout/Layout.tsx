@@ -4,6 +4,7 @@ import { useMe } from '../Context/ctx'
 
 import {
 	getAllIdeasRoute,
+	getEditProfileRoute,
 	getNewIdeasRoute,
 	getSignInRoute,
 	getSignOutRoute,
@@ -32,6 +33,12 @@ const Layout = () => {
 							<li className={styles.item}>
 								<Link className={styles.link} to={getNewIdeasRoute()}>
 									Add Idea
+								</Link>
+							</li>
+
+							<li className={styles.item}>
+								<Link className={styles.link} to={getEditProfileRoute()}>
+									Edit Profile
 								</Link>
 							</li>
 

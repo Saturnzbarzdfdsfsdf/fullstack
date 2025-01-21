@@ -1,10 +1,12 @@
 import { trpc } from '../lib/trpc'
 
-import { 
+import {
 	getMeTrpcRoute,
 	signUpTrpcRoute,
-	signInTrpcRoute 
+	signInTrpcRoute,
+	updateProfileTrpcRoute,
 } from './auth/index'
+
 
 import {
 	getIdeaTrpcRoute,
@@ -22,6 +24,7 @@ export const trpcRouter = trpc.router({
 	getMe: getMeTrpcRoute,
 	signIn: signInTrpcRoute,
 	signUp: signUpTrpcRoute,
+	updateProfile: updateProfileTrpcRoute,
 	updateIdea: updateIdeaTrpcRoute,
 })
 
